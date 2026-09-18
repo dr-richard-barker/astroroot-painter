@@ -90,6 +90,28 @@ This is the whole trick: you only ever paint what the *current* model got wrong,
 full mask. Live brush colors in the desktop client: foreground `rgba(255,0,0,180)`,
 background `rgba(0,255,0,180)`, eraser fully transparent. Blue/alpha are cosmetic only.
 
+**Landmine, confirmed by reading `trainer.py` and reproducing it live: training silently
+never progresses past the initial random-weights checkpoint if `val_annot_dir` has zero
+annotated images.**
+
+```python
+def train_one_epoch(self):
+    ...
+    if not [is_photo(a) for a in ls(train_annot_dir)]:
+        return
+    if not [is_photo(a) for a in ls(val_annot_dir)]:
+        return          # <-- silent no-op. No exception, no message, no log line.
+```
+
+Reproduced directly: with only `train/` annotated, `start_training` was accepted
+(`executed_instructions/`), the trainer sat at 0% CPU printing nothing beyond the
+initial-checkpoint creation, and neither `messages/` nor `logs/` ever gained a new entry
+— indistinguishable from "working but slow" unless you already know to check this.
+Dropping one annotated image into `val/` while the trainer kept running (no restart
+needed — it re-lists both directories every loop) made it start real training within
+one poll cycle. **astroroot-painter's UI must not let a user hit this blind** — see
+`app.js`'s `canStartTraining()`/annotation-count guard, added specifically for this.
+
 ## Model checkpoints
 
 Plain `torch.save(state_dict())` of a custom `UNetGNRes` (Group-Norm residual U-Net),

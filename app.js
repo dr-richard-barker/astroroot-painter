@@ -43,6 +43,24 @@ async function refreshProjectList(){
   sel.innerHTML = entries.map(e => `<option value="${e.name}">${e.name}</option>`).join("") || "<option value=''>(none yet)</option>";
 }
 
+// The real trainer silently never progresses past the initial random-weights
+// checkpoint when val_annot_dir has zero annotated images — no error, no log line,
+// nothing (confirmed by reading trainer.py and reproducing it; docs/PROTOCOL.md).
+// Start training must not be enabled until there's at least one annotation on each
+// side, and the reason must be visible, not just a disabled button.
+async function refreshAnnotationCounts(){
+  if(!state.project) return { train: 0, val: 0 };
+  const train = (await fs.listDir(`projects/${state.project}/annotations/train`)).filter(e => e.kind === "file").length;
+  const val = (await fs.listDir(`projects/${state.project}/annotations/val`)).filter(e => e.kind === "file").length;
+  const el = $("annotCounts");
+  el.textContent = `train: ${train} annotated · val: ${val} annotated`;
+  if(val === 0){
+    el.textContent += " — add at least 1 val annotation or training will silently never progress";
+  }
+  $("startTrainingBtn").disabled = !(train >= 1 && val >= 1);
+  return { train, val };
+}
+
 async function renderFileList(){
   const ul = $("fileList");
   ul.innerHTML = "";
@@ -116,7 +134,7 @@ $("datasetSelect").onchange = () => { state.dataset = $("datasetSelect").value |
 
 $("projectSelect").onchange = async () => {
   const name = $("projectSelect").value;
-  if(!name){ setProjectControlsEnabled(false); return; }
+  if(!name){ setProjectControlsEnabled(false); $("annotCounts").textContent = "no project loaded"; return; }
   state.project = name;
   const segProj = await fs.readJSON(`projects/${name}/${name}.seg_proj`);
   state.dataset = segProj.dataset;
@@ -124,6 +142,7 @@ $("projectSelect").onchange = async () => {
   $("datasetSelect").value = state.dataset;
   setProjectControlsEnabled(true);
   await renderFileList();
+  await refreshAnnotationCounts();  // may re-disable startTrainingBtn — must run after setProjectControlsEnabled
   if(state.fileNames.length) await loadImage(state.fileNames[0]);
 };
 
@@ -144,6 +163,7 @@ $("saveAnnotBtn").onclick = async () => {
   const blob = await painter.toAnnotationBlob();
   await fs.writeBytes(`projects/${state.project}/annotations/${split}/${stem(state.currentFile)}.png`, blob);
   log(`Saved annotation for ${state.currentFile} → ${split}/`, "ok");
+  await refreshAnnotationCounts();
 };
 
 $("startTrainingBtn").onclick = async () => {
