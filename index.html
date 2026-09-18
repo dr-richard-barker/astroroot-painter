@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>astroroot-painter</title>
+<style>
+  :root{ --bg:#0f1115; --panel:#171a21; --line:#2a2f3a; --text:#e6e8ec; --muted:#8b93a3; --accent:#4fd1c5; --fg:#ff4d4d; --bgpaint:#3ddc72; }
+  *{box-sizing:border-box}
+  body{ margin:0; background:var(--bg); color:var(--text); font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  header{ padding:14px 20px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:16px; }
+  header h1{ font-size:15px; margin:0; font-weight:600; }
+  header .sub{ color:var(--muted); font-size:12px; }
+  main{ display:grid; grid-template-columns:280px 1fr 300px; gap:0; height:calc(100vh - 53px); }
+  .panel{ padding:14px; overflow-y:auto; border-right:1px solid var(--line); }
+  .panel:last-child{ border-right:none; border-left:1px solid var(--line); }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin-bottom:5px; }
+  select, input[type=text], input[type=number]{ width:100%; background:var(--panel); border:1px solid var(--line); color:var(--text); padding:6px 8px; border-radius:6px; font-size:13px; }
+  button{ background:var(--panel); border:1px solid var(--line); color:var(--text); padding:7px 10px; border-radius:6px; font-size:13px; cursor:pointer; }
+  button:hover{ border-color:var(--accent); }
+  button:disabled{ opacity:.4; cursor:not-allowed; }
+  button.primary{ background:var(--accent); color:#062; border-color:var(--accent); font-weight:600; }
+  .row{ display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .center{ display:flex; align-items:center; justify-content:center; padding:20px; overflow:auto; }
+  .canvas-wrap{ max-width:100%; }
+  .canvas-wrap canvas{ display:block; }
+  .brush-modes{ display:flex; gap:6px; }
+  .brush-modes button.active{ outline:2px solid var(--accent); }
+  .swatch{ width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:6px; }
+  #log{ font-family:ui-monospace,Menlo,monospace; font-size:11.5px; white-space:pre-wrap; color:var(--muted); }
+  #log .err{ color:#ff6b6b; }
+  #log .ok{ color:var(--bgpaint); }
+  h2{ font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:0 0 10px; border-bottom:1px solid var(--line); padding-bottom:6px; }
+  .filelist{ list-style:none; margin:0; padding:0; }
+  .filelist li{ padding:5px 7px; border-radius:5px; cursor:pointer; font-size:12.5px; }
+  .filelist li:hover{ background:var(--panel); }
+  .filelist li.current{ background:var(--accent); color:#062; }
+  .hint{ color:var(--muted); font-size:11.5px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>astroroot-painter</h1>
+  <span class="sub">RootPainter's corrective-annotation loop, in the browser — <a href="https://doi.org/10.1111/nph.18387" style="color:var(--accent)">Smith et al. 2022</a></span>
+  <span style="flex:1"></span>
+  <span id="mountStatus" class="sub">not mounted</span>
+  <button id="mountBtn" class="primary">Mount sync folder…</button>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>Project</h2>
+    <div class="field">
+      <label for="datasetSelect">Dataset</label>
+      <select id="datasetSelect" disabled></select>
+    </div>
+    <div class="row">
+      <button id="importFilesBtn" disabled>Import images…</button>
+      <input id="importFilesInput" type="file" multiple accept="image/*" style="display:none">
+    </div>
+    <div class="field">
+      <label for="projectSelect">Project</label>
+      <select id="projectSelect" disabled></select>
+    </div>
+    <div class="row">
+      <button id="newProjectBtn" disabled>New project…</button>
+    </div>
+
+    <h2 style="margin-top:20px">Images</h2>
+    <ul id="fileList" class="filelist"></ul>
+
+    <h2 style="margin-top:20px">Trainer</h2>
+    <div class="row">
+      <button id="startTrainingBtn" disabled>Start training</button>
+      <button id="stopTrainingBtn" disabled>Stop training</button>
+    </div>
+    <div class="row">
+      <button id="segmentBtn" disabled>Segment current image</button>
+      <button id="statusBtn" disabled>Check trainer status</button>
+    </div>
+    <div id="trainerStatus" class="hint">no status yet</div>
+  </section>
+
+  <section class="center">
+    <div id="canvasWrap" class="canvas-wrap"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Brush</h2>
+    <div class="brush-modes row">
+      <button id="modeFg" class="active"><span class="swatch" style="background:var(--fg)"></span>foreground</button>
+      <button id="modeBg"><span class="swatch" style="background:var(--bgpaint)"></span>background</button>
+      <button id="modeErase">eraser</button>
+    </div>
+    <div class="field">
+      <label for="brushSize">Brush radius (image px)</label>
+      <input id="brushSize" type="number" value="12" min="1" max="200">
+    </div>
+    <div class="row">
+      <button id="clearAnnotBtn">Clear annotation</button>
+    </div>
+    <div class="field">
+      <label for="splitSelect">Save annotation to</label>
+      <select id="splitSelect"><option value="train">train</option><option value="val">val</option></select>
+    </div>
+    <div class="row">
+      <button id="saveAnnotBtn" class="primary" disabled>Save annotation</button>
+    </div>
+
+    <h2 style="margin-top:20px">Log</h2>
+    <div id="log"></div>
+  </section>
+</main>
+
+<script src="syncfs.js"></script>
+<script src="rootpainter-protocol.js"></script>
+<script src="paint.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

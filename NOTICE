@@ -1,0 +1,31 @@
+astroroot-painter is licensed under the GNU General Public License v3.0 (see LICENSE).
+
+This repository does not vendor or modify RootPainter's code. It is a browser client
+that speaks RootPainter's own file-sync protocol (documented in docs/PROTOCOL.md) to an
+unmodified RootPainter trainer, installed separately by the user:
+
+    pip install root-painter-trainer==0.3.0
+    start-trainer --syncdir /path/to/sync_dir
+
+RootPainter itself — https://github.com/Abe404/root_painter — is licensed GPLv3 (one
+file, painter/src/main/python/eccentricity.py, is separately BSD-3-Clause, derived from
+scikit-image; that file is not used here). Paper:
+
+    Smith, A. G., Han, E., Petersen, J., Olsen, N. A. F., Giese, C., Athmann, M.,
+    Dresbøll, D. B., & Thorup-Kristensen, K. (2022). RootPainter: deep learning
+    segmentation of biological images with corrective annotation. New Phytologist,
+    236(2), 774-791. https://doi.org/10.1111/nph.18387
+
+Why this repository is GPLv3 rather than this portfolio's usual MIT-for-tools default:
+its code is written directly against RootPainter's own file formats and protocol, not
+called at arm's length through a stable public API. GPLv3 was chosen to match that
+coupling honestly, not applied as a default.
+
+Note: RootPainter's own `trainer/pyproject.toml` package metadata currently says
+`GPL-2.0`, which disagrees with the `LICENSE` file in the same repository (GPLv3). That
+mismatch is upstream's; this repository follows the LICENSE file.
+
+The File System Access API integration pattern (mounting and reading/writing a real
+local folder from a static page) is adapted from this same author's prior work in
+`cose-fiji` (`NATIVE_FILESYSTEM.md`). Canvas/image-handling conventions are adapted from
+`astroroot`, this repository's sibling tool for in-browser root analysis.
