@@ -12,8 +12,20 @@ class SyncFS {
 
   async mount(){
     if(!this.supported) throw new Error("File System Access API not available — use Chrome or Edge 86+.");
-    this.root = await window.showDirectoryPicker({ mode: "readwrite" });
+    // `id` makes Chrome reopen the picker wherever this picker was last used.
+    this.root = await window.showDirectoryPicker({ mode: "readwrite", id: "rootpainter-sync" });
     return this.root;
+  }
+
+  forget(){ this.root = null; }
+
+  // A folder the trainer has already run against has these; checked before
+  // ensureFolders() so a wrongly-picked folder isn't silently filled with them.
+  async looksLikeSyncFolder(){
+    for(const name of ["projects", "instructions"]){
+      try{ await this.root.getDirectoryHandle(name); } catch { return false; }
+    }
+    return true;
   }
 
   async ensureFolders(){

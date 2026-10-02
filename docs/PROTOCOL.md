@@ -90,6 +90,27 @@ This is the whole trick: you only ever paint what the *current* model got wrong,
 full mask. Live brush colors in the desktop client: foreground `rgba(255,0,0,180)`,
 background `rgba(0,255,0,180)`, eraser fully transparent. Blue/alpha are cosmetic only.
 
+The desktop client paints with `QPainter.CompositionMode_Source` and no antialiasing
+(`graphics_scene.py`), so a stroke **replaces** the pixels under it. astroroot-painter's
+brush does the same, pixel by pixel. An earlier version blended semi-transparent colour
+over what was there, so painting soil over root left pixels that were both, and erasing
+left a ring of partly transparent pixels that still counted as painted. `tests/smoke.js`
+now checks every pixel is exactly one of the three values.
+
+How the trainer reads them (`root_painter_trainer` 0.3.0, `im_utils.py`):
+
+- It pairs an annotation with its image **by filename stem** — `glob(stem + '.*')` — so a
+  `.png` annotation for a `.jpg` photo is fine.
+- It **asserts every training annotation has painted pixels** (`assert np.sum(annot) > 0`).
+  astroroot-painter never writes an empty annotation: saving with nothing painted removes
+  that image's annotation instead.
+- It converts every image to RGB (grayscale is fine) and applies its EXIF orientation —
+  but reads annotations as-is. Browsers also apply EXIF orientation when drawing, so the
+  two agree; a collection whose photos carry rotation flags is still worth spot-checking.
+
+An image's annotation lives in exactly one of `train/` and `val/`; saving it to one
+removes it from the other, so validation never scores an image the model trained on.
+
 **Landmine, confirmed by reading `trainer.py` and reproducing it live: training silently
 never progresses past the initial random-weights checkpoint if `val_annot_dir` has zero
 annotated images.**
@@ -146,3 +167,29 @@ Per-day CSV in `logs/`, header:
 - Redirecting the trainer's stdout to a file shows nothing until the process is killed
   hard or exits on its own — Python fully-buffers stdout when it's not a TTY. Use
   `python -u` (or `PYTHONUNBUFFERED=1`) when debugging via a log file.
+
+## Verified against real training (2026-09-18)
+
+Instructions and annotations were written from Python in exactly the format
+`rootpainter-protocol.js` and `paint.js` produce (the browser's folder picker can't be
+driven by automation), against the real `start-trainer` on three small synthetic images.
+This was observed in a development session; its script and trainer log were in a
+temporary folder that has since been cleaned, so the figures below aren't backed by a file
+in this repo. TODO: commit a script that re-runs this check against a real trainer and
+keeps its log.
+
+- `start_training` → `executed_instructions/`. The trainer created the initial
+  random-weights checkpoint (`000001_<timestamp>.pkl`) and then sat idle until one
+  annotation was added to `val/` — the landmine described above — after which it logged
+  real training steps on MPS.
+- `stop_training` → executed; `messages/` gained `Training started` and `Training stopped`.
+  Because this came before the first epoch finished, **no trained checkpoint was saved and
+  `logs/` stayed empty** — the only model on disk was the initial random-weights one.
+- `segment` → executed and wrote an RGBA PNG the size of the source image to
+  `segmentations/` — produced by that initial, untrained model, so it proves the file
+  round-trip, not segmentation quality.
+- `trainer_status` → executed and wrote `trainer_status.json`
+  (`{"timestamp": …, "training": false}`).
+- Instructions sent right after `stop_training` were picked up only after a noticeably
+  longer delay than usual (the trainer finishing its in-flight work first) — they still
+  executed, well inside `pollInstruction`'s 60 s default timeout.

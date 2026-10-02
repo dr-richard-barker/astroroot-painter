@@ -21,8 +21,11 @@ first run (`projects/`, `datasets/`, `instructions/`, `executed_instructions/`,
 with 8GB+ VRAM, or Apple Silicon (checked with `python3 -c "import torch;
 print(torch.backends.mps.is_available())"` — should print `True`).
 
-Then, in astroroot-painter, click **Mount sync folder…** and pick the exact same folder
-(`~/root_painter_sync` in the example above).
+Then use astroroot-painter as normal: pick a dataset and paint. The first time you save
+an annotation (or click **Mount sync folder…**), it asks for a folder — pick the exact
+same one you gave `--syncdir` (`~/root_painter_sync` in the example above). If you pick
+a folder the trainer has never run against, it asks before creating anything in it, so
+a wrong pick doesn't leave RootPainter folders behind.
 
 ## Option B — Google Colab (no local GPU)
 

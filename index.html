@@ -23,8 +23,10 @@
   button:disabled{ opacity:.4; cursor:not-allowed; }
   button.primary{ background:var(--accent); color:#062; border-color:var(--accent); font-weight:600; }
   .row{ display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
-  .center{ display:flex; align-items:center; justify-content:center; padding:20px; overflow:auto; }
-  .canvas-wrap{ max-width:100%; }
+  .center{ display:flex; padding:20px; overflow:auto; }
+  /* margin:auto centres a small image but lets a tall one start at the top of the
+     scroll area — flex centering put the top 224px of a TICTOC pouch out of reach. */
+  .canvas-wrap{ max-width:100%; margin:auto; }
   .canvas-wrap canvas{ display:block; }
   .brush-modes{ display:flex; gap:6px; }
   .brush-modes button.active{ outline:2px solid var(--accent); }
@@ -38,6 +40,10 @@
   .filelist li:hover{ background:var(--panel); }
   .filelist li.current{ background:var(--accent); color:#062; }
   .hint{ color:var(--muted); font-size:11.5px; }
+  .hint.err{ color:#ff6b6b; }
+  .hint.warn{ color:#f0b429; }
+  #hint{ margin:0 0 12px; line-height:1.5; }
+  #imagesNote{ margin:-4px 0 8px; }
 </style>
 </head>
 <body>
@@ -53,12 +59,15 @@
 <main>
   <section class="panel">
     <h2>Project</h2>
+    <p id="hint" class="hint">Pick a collection from the calibration database to browse and paint — nothing to set up.
+      You'll be asked for your RootPainter sync folder (the one <code>start-trainer --syncdir</code> watches) only when you save an annotation or train.</p>
+    <p id="browserNote" class="hint warn"></p>
     <div class="field">
       <label for="datasetSelect">Dataset</label>
-      <select id="datasetSelect" disabled></select>
+      <select id="datasetSelect"></select>
     </div>
     <div class="row">
-      <button id="importFilesBtn" disabled>Import images…</button>
+      <button id="importFilesBtn" disabled title="Mount the sync folder first">Import your own images…</button>
       <input id="importFilesInput" type="file" multiple accept="image/*" style="display:none">
     </div>
     <div class="field">
@@ -70,6 +79,7 @@
     </div>
 
     <h2 style="margin-top:20px">Images</h2>
+    <div id="imagesNote" class="hint"></div>
     <ul id="fileList" class="filelist"></ul>
 
     <h2 style="margin-top:20px">Trainer</h2>
@@ -119,6 +129,7 @@
 <script src="syncfs.js"></script>
 <script src="rootpainter-protocol.js"></script>
 <script src="paint.js"></script>
+<script src="db-collections.js"></script>
 <script src="app.js"></script>
   <script defer src="https://visitor-analytics.astrobotany.workers.dev/a.js"></script>
 </body>

@@ -1,0 +1,182 @@
+{
+ "generated_by": "scripts/sync_collections.py — do not edit by hand",
+ "source": "https://github.com/dr-richard-barker/AstroBotany_calibration_image_sharing_and_analysis/blob/96e51adb3c76dea187cf4984618f8ca4bef0bac8/src/api/epicollect.ts",
+ "collections": [
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/APEX05/images",
+   "name": "APEX05 — root architecture (Flight vs GC)",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "APEX05/images"
+   },
+   "organism": "Arabidopsis thaliana",
+   "description": "Root architecture: 120 curated images + 424 SmartRoot RSML traces (via AstroRoot)."
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/NASA_OSDR/OSD-120/images",
+   "name": "NASA OSD-120 — Arabidopsis roots (Flight vs Ground)",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "NASA_OSDR/OSD-120/images"
+   },
+   "organism": "Arabidopsis thaliana",
+   "description": "48 curated root morphometric photographs."
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/NASA_OSDR/OSD-121/images",
+   "name": "NASA OSD-121 — BRIC-16 Arabidopsis",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "NASA_OSDR/OSD-121/images"
+   },
+   "organism": "Arabidopsis thaliana",
+   "description": "BRIC-16: 26 morphometric photographs of gravity-perception / cytoskeleton development."
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/NASA_OSDR/OSD-476/images",
+   "name": "NASA OSD-476 — Arabidopsis in lunar regolith",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "NASA_OSDR/OSD-476/images"
+   },
+   "organism": "Arabidopsis thaliana",
+   "description": "20 raw plate scans (OSDR) + 20 shoot-analysis stills (Lunar_regolith_AWG)."
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/TICTOC/images",
+   "name": "TICTOC — cotton roots (Flight vs Ground)",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "TICTOC/images"
+   },
+   "organism": "Gossypium (cotton)",
+   "description": "Cotton spaceflight root architecture: images, timelapse and 198 SmartRoot RSML traces."
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/APEX03",
+   "name": "APEX03 — Arabidopsis Sku6 vs Col-0 (Flight vs Ground)",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "APEX03"
+   },
+   "organism": "Arabidopsis thaliana",
+   "description": "11-day phenotype photographs from the APEX03 spaceflight experiment; related to the OSD-193 root transcriptomics study."
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/TASTIE_tomato/images",
+   "name": "TASTIE — tomato roots ± Trichoderma",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "TASTIE_tomato/images"
+   },
+   "organism": "Solanum lycopersicum (tomato)",
+   "description": "48 root/plant images + 49 SmartRoot RSML traces (via AstroRoot); RSML basenames match the photos."
+  },
+  {
+   "slug": "gh:dr-richard-barker/madwest-astrobotany/main/assets/timelapse",
+   "name": "MadWest TREES — Populus ± ECM (Flight vs Ground)",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "madwest-astrobotany",
+    "ref": "main",
+    "path": "assets/timelapse"
+   },
+   "organism": "Populus tremula (aspen)",
+   "description": "5 H.264 growth timelapse movies (TREES — the program’s 3rd rocket launch)."
+  },
+  {
+   "slug": "gh:dr-richard-barker/madwest-astrobotany/main/assets/trees_stills/images",
+   "name": "MadWest TREES — growth stills (Populus)",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "madwest-astrobotany",
+    "ref": "main",
+    "path": "assets/trees_stills/images"
+   },
+   "organism": "Populus tremula (aspen)",
+   "description": "126 curated growth-arm stills (6 timepoints × 21 plants)."
+  },
+  {
+   "slug": "clinostat-collaboration",
+   "name": "Clinostat Collaboration",
+   "type": "ec5"
+  },
+  {
+   "slug": "airi-microgreen-growth-biomass-analysis",
+   "name": "AIRI Microgreen Growth & Biomass",
+   "type": "ec5"
+  },
+  {
+   "slug": "growing-beyond-earth-2021-2022",
+   "name": "Growing Beyond Earth 2021–2022",
+   "type": "ec5"
+  },
+  {
+   "slug": "nasa-roots",
+   "name": "NASA Roots",
+   "type": "ec5"
+  },
+  {
+   "slug": "greencompanions",
+   "name": "GreenCompanions — Aquatic Microgreens",
+   "type": "ec5",
+   "formRef": "ea9a607f7c014276bc7bce0a2e794167_5ff90e8cdb1ba",
+   "organism": "Wolffia australiana / Lemna / Landoltia / Azolla",
+   "description": "Aquatic microgreens and duckweed companions."
+  },
+  {
+   "slug": "the-spacechilechallenge-cose",
+   "name": "The SpaceChileChallenge",
+   "type": "ec5"
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/ABRS_NASA_Roots_TimeLapse/ABRS_Flight",
+   "name": "ABRS Roots time-lapse — Flight",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "ABRS_NASA_Roots_TimeLapse/ABRS_Flight"
+   },
+   "organism": "Arabidopsis thaliana",
+   "description": "ABRS root-growth time-lapse (Flight) — image sequence + playable movies."
+  },
+  {
+   "slug": "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/ABRS_NASA_Roots_TimeLapse/ABRS_Ground_control",
+   "name": "ABRS Roots time-lapse — Ground control",
+   "type": "github",
+   "gh": {
+    "owner": "dr-richard-barker",
+    "repo": "image-analysis-software-and-R-codes",
+    "ref": "master",
+    "path": "ABRS_NASA_Roots_TimeLapse/ABRS_Ground_control"
+   },
+   "organism": "Arabidopsis thaliana",
+   "description": "ABRS root-growth time-lapse (Ground control) — image sequence + playable movies."
+  }
+ ]
+}
