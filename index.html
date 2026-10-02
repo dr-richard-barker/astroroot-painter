@@ -12,7 +12,10 @@
   header{ padding:14px 20px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:16px; }
   header h1{ font-size:15px; margin:0; font-weight:600; }
   header .sub{ color:var(--muted); font-size:12px; }
-  main{ display:grid; grid-template-columns:280px 1fr 300px; gap:0; height:calc(100vh - 53px); }
+  /* Side panels shrink before the image does: embedded in the calibration database
+     on a laptop the painter gets ~750px, where fixed 280/300px panels left the
+     image 124px wide. */
+  main{ display:grid; grid-template-columns:minmax(190px,280px) minmax(340px,1fr) minmax(190px,300px); gap:0; height:calc(100vh - 53px); }
   .panel{ padding:14px; overflow-y:auto; border-right:1px solid var(--line); }
   .panel:last-child{ border-right:none; border-left:1px solid var(--line); }
   .field{ margin-bottom:14px; }

@@ -162,6 +162,11 @@
       `${sel.options[sel.selectedIndex]?.textContent}, ${fdoc.getElementById("fileList").children.length} images`);
     const visible = id => fdoc.defaultView.getComputedStyle(fdoc.querySelector(id)).display !== "none";
     check("?embed=1 hides the title but keeps the Mount button", !visible("header h1") && visible("#mountBtn"));
+    // Laptop-width embed: the database's sidebar leaves the painter ~750px.
+    frame.style.width = "744px";
+    await new Promise(r => setTimeout(r, 300));
+    const col = fdoc.getElementById("canvasWrap").parentElement.getBoundingClientRect().width;
+    check("embedded at laptop width, the image column keeps at least 340px", col >= 340, `${Math.round(col)}px`);
   } else {
     check("?collection= preselects that collection and lists its images", false, "embedded page never listed images");
   }
