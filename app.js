@@ -467,6 +467,19 @@ async function init(){
   await renderDatasetOptions();
   await refreshAnnotationCounts();
   updateControls();
+
+  // Opened from the calibration database (its tools.ts, launch: 'dataset'):
+  // ?collection=<slug> preselects the collection the user was looking at there.
+  const wanted = new URLSearchParams(location.search).get("collection");
+  if(wanted){
+    const value = "db:" + wanted;
+    if([...$("datasetSelect").options].some(o => o.value === value)){
+      $("datasetSelect").value = value;
+      await selectDataset(value);
+    } else {
+      log(`The database's current collection (${wanted}) isn't an image folder this tool can read — pick one from the list.`);
+    }
+  }
 }
 
 init();

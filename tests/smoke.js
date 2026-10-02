@@ -146,5 +146,26 @@
 
   check("still not mounted (browsing must not require the picker)", document.getElementById("mountStatus").textContent.includes("not mounted"));
 
+  // How the calibration database opens this tool (its tools.ts, launch: 'dataset').
+  // Checked in a hidden iframe so this page's own state isn't disturbed.
+  const slug = "gh:dr-richard-barker/image-analysis-software-and-R-codes/master/TASTIE_tomato/images";
+  const frame = Object.assign(document.createElement("iframe"), {
+    src: `${location.pathname}?embed=1&collection=${encodeURIComponent(slug)}`,
+    style: "position:fixed;left:-3000px;width:1280px;height:800px",
+  });
+  document.body.appendChild(frame);
+  const fdoc = await waitFor(() => frame.contentDocument?.getElementById("fileList")?.children.length && frame.contentDocument);
+  if (fdoc) {
+    const sel = fdoc.getElementById("datasetSelect");
+    check("?collection= preselects that collection and lists its images",
+      sel.value === "db:" + slug && fdoc.getElementById("fileList").children.length > 0,
+      `${sel.options[sel.selectedIndex]?.textContent}, ${fdoc.getElementById("fileList").children.length} images`);
+    const visible = id => fdoc.defaultView.getComputedStyle(fdoc.querySelector(id)).display !== "none";
+    check("?embed=1 hides the title but keeps the Mount button", !visible("header h1") && visible("#mountBtn"));
+  } else {
+    check("?collection= preselects that collection and lists its images", false, "embedded page never listed images");
+  }
+  frame.remove();
+
   return { pass: checks.every(c => c.ok), checks };
 })();

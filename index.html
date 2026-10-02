@@ -48,6 +48,16 @@
 </head>
 <body>
 
+<script>
+  // Embedded in the calibration database (?embed=1): its shell already names the
+  // tool, so drop the title row text — but keep the folder status and Mount button.
+  if (new URLSearchParams(location.search).get("embed") === "1") document.documentElement.classList.add("embedded");
+</script>
+<style>
+  .embedded header h1, .embedded header .sub:not(#mountStatus){ display:none; }
+  .embedded header{ padding:8px 14px; }
+  .embedded main{ height:calc(100vh - 47px); }
+</style>
 <header>
   <h1>astroroot-painter</h1>
   <span class="sub">RootPainter's corrective-annotation loop, in the browser — <a href="https://doi.org/10.1111/nph.18387" style="color:var(--accent)">Smith et al. 2022</a></span>
